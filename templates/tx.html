@@ -166,9 +166,9 @@ This tx does not includes a vote from this testing service node (only 7 votes ar
             <p><label>Unlock signature:</label> {{unlock_signature}}</p> {# FIXME #}
         {% elif tx.info.type == 4 and 'lns' in tx.extra %}
             {% if 'buy' in tx.extra.lns %}
-                <h2>🎫 Oxen Name Service Registration</h2>
+                <h2>🎫 Equilibria Name Service Registration</h2>
             {% elif 'update' in tx.extra.lns %}
-                <h2>💾 Oxen Name Service Update</h2>
+                <h2>💾 Equilibria Name Service Update</h2>
             {% endif %}
             {#FIXME - show some metadata?#}
         {% elif 'sn_registration' in tx.extra %}

@@ -1,3 +1,4 @@
+import oxenmq
 # Default configuration options for block observer.
 #
 # To override settings add `config.whatever = ...` into `local_config.py`; adding settings *here*
@@ -10,7 +11,7 @@
 # LMQ RPC endpoint of oxend; can be a unix socket 'ipc:///path/to/oxend.sock' (preferred) or a tcp
 # socket 'tcp://127.0.0.1:5678'.  Typically you want this running with admin permission.
 # Leave this as None here, and set it for each observer in the mainnet.py/testnet.py/etc. script.
-oxend_rpc = None
+oxend_rpc = oxenmq.Address('tcp://127.0.0.1:22025')
 
 # Default blocks per page for the index.
 blocks_per_page=20

@@ -194,7 +194,8 @@ def get_sns(sns_future, info_future):
     sn_states = sns_future.get()
     sn_states = sn_states['service_node_states'] if 'service_node_states' in sn_states else []
     for sn in sn_states:
-        sn['contribution_open'] = sn['staking_requirement'] - sn['total_reserved']
+        print(sn)
+        sn['contribution_open'] = sn['staking_requirement'] - sn['total_contributed']
         sn['contribution_required'] = sn['staking_requirement'] - sn['total_contributed']
         sn['num_contributions'] = sum(len(x['locked_contributions']) for x in sn['contributors'] if 'locked_contributions' in x)
 
@@ -347,12 +348,14 @@ def main(refresh=None, page=0, per_page=None, first=None, last=None, style=None)
     # Clean up the SN data a bit to make things easier for the templates
     awaiting_sns, active_sns, inactive_sns = get_sns(sns, inforeq)
 
+    print(accrued.get())
+
     return flask.render_template('index.html',
             info=info,
             stake=stake.get(),
             fees=base_fee.get(),
             emission=coinbase.get(),
-            accrued_total=sum(accrued.get()['amounts']),
+            accrued_total=sum(accrued.get()['balances']),
             hf=hfinfo.get(),
             active_sns=active_sns,
             active_swarms=len(set(x['swarm_id'] for x in active_sns)),
@@ -638,11 +641,12 @@ def parse_txs(txs_rpc):
         if 'info' not in tx:
             # We have serialized JSON data inside a field in the JSON, because of oxend's
             # multiple incompatible JSON generators 🤮:
-            tx['info'] = json.loads(tx["as_json"])
-            del tx['as_json']
+            # tx['info'] = json.loads(tx["as_json"])
+            # del tx['as_json']
+            tx['info'] = tx
             # The "extra" field inside as_json is retardedly in per-byte integer values,
             # convert it to a hex string 🤮:
-            tx['info']['extra'] = bytes_to_hex(tx['info']['extra'])
+            # tx['info']['extra'] = bytes_to_hex(tx['info']['extra'])
     return txs_rpc['txs']
 
 
@@ -1032,3 +1036,6 @@ def api_price(fiat=None):
     else:
         fiat = fiat.lower()
         return flask.jsonify({ fiat: ticker_cache[fiat] } if fiat in ticker_cache else {})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
