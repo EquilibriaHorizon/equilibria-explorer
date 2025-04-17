@@ -1,8 +1,4 @@
+import oxenmq
 from observer import config
 
-# Local settings.  Changes to this file are meant for a local installation (and should not be
-# committed to git).
-
-# Example config override:
-#config.blocks_per_page = 10
-
+config.oxend_rpc = oxenmq.Address('ipc:///home/sstar/.equilibria/equilibria.sock')
